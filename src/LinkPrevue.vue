@@ -1,28 +1,27 @@
 <template>
   <div>
-    <div id="loader-container" v-if="!response && validUrl" :style="{width:cardWidth}">
+    <div id="loader-container" v-if="!response && validUrl" style="width: 100%;">
       <slot name="loading">
-        <div class="spinner"></div>
+      <div class="spinner"></div>
       </slot>
     </div>
     <div v-if="response">
       <slot :img="response.images[0]" :title="response.title" :description="response.description" :url="url">
-      	<div class="wrapper" :style="{width:cardWidth}">
-            <div class="card-img">
-          		<img :src="response.images[0]">
-        		</div>
-        		<div class="card-info">
-          		<div class="card-text">
-            		<h1>{{response.title}}</h1>
-            		<p>{{response.description}}</p>
-          		</div>
-          		<div class="card-btn">
-            		<a href="javascript:;" v-if="showButton" @click="viewMore">View More</a>
-          		</div>
-        		</div>
-      	</div>
-    	</slot>
-  	</div>
+      <div class="blog-preview-wrapper" @click="viewMore">
+        <div class="blog-preview-card-img">
+          <img :src="response.images[0]">
+        </div>
+        <div class="blog-preview-card-info">
+          <div class="card-text">
+            <h4>{{response.title}}</h4>
+          </div>
+          <div class="blog-preview-card-btn">
+            <a class="btn btn--tertiary btn--small" href="javascript:;" v-if="showButton" @click="viewMore">記事を読む</a>
+          </div>
+        </div>
+      </div>
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -96,12 +95,12 @@ export default {
       http.open('POST', this.apiUrl, true)
       http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
       http.onreadystatechange = function() {
-    		if (http.readyState === 4 && http.status === 200) {
-        	   success(http.responseText)
-    		   }
+        if (http.readyState === 4 && http.status === 200) {
+          success(http.responseText)
+        }
         if (http.readyState === 4 && http.status === 500) {
-        	   error()
-    		   }
+          error()
+        }
       }
       http.send(params)
     }
@@ -112,20 +111,25 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Hind+Siliguri:400,600');
 
-.wrapper {
+.blog-preview-wrapper {
   overflow: auto;
   border-radius: 7px 7px 7px 7px;
   background-color: #fff;
   -webkit-box-shadow: 0px 14px 32px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 14px 32px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 14px 32px 0px rgba(0, 0, 0, 0.15);
-}
-
-.card-img {
+  display: flex;
   width: 100%;
+  cursor: pointer;
 }
 
-.card-img img {
+.blog-preview-card-img {
+  width: 30%;
+  display: flex;
+  align-items: center;
+}
+
+.blog-preview-card-img img {
   width: 100%;
   border-radius: 7px 7px 0 0;
 }
@@ -135,60 +139,33 @@ img {
   border-style: none;
 }
 
-.card-info {
+.blog-preview-card-info {
   border-radius: 0 0 7px 7px;
   background-color: #ffffff;
+  width: 70%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 16px;
 }
 
-.card-text {
-  width: 80%;
+.blog-preview-card-text {
+  width: 100%;
   margin: 0 auto;
   text-align: justify;
 }
 
-.card-text h1 {
+.blog-preview-card-text h4 {
   text-align: center;
   font-size: 24px;
   color: #474747;
   margin: 5px 0 5px 0;
-  font-family: 'Hind Siliguri', sans-serif;
 }
 
-.card-text p {
-  font-family: 'Hind Siliguri', sans-serif;
-  color: #8d8d8d;
-  font-size: 15px;
-  overflow: hidden;
-  margin: 0;
-  text-align: center;
-}
-
-.card-btn {
+.blog-preview-card-btn {
   margin: 1em 0 1em 0;
   position: relative;
   text-align: center;
-}
-
-.card-btn a {
-  border-radius: 2em;
-  font-family: 'Hind Siliguri', sans-serif;
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  color: #ffffff;
-  background-color: #ffa9be;
-  padding: 10px 20px 10px 20px;
-  text-align: center;
-  display: inline-block;
-  text-decoration: none !important;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-
-.card-btn a:hover {
-  background-color: #ff8fab;
 }
 
 /* Loader */
